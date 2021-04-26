@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  registerToken
+
+  Sample SAM Template for registerToken
+  
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  RegisterTokenFuncion:
+    Type: AWS::Serverless::Function
+    Properties:      
+      CodeUri: registerToken/
+      Handler: app.lambdaHandler
+      Runtime: nodejs14.x-v1
+      Events:
+        RegisterToken:
+          Type: Api
+          Properties:
+            Path: /registerToken
+            Method: post
+    Metadata:
+      DockerTag: nodejs14.x-v1
+      DockerContext: ./registerToken
+      Dockerfile: Dockerfile
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  RegisterTokenApi:
+    Description: "API Gateway endpoint URL for Prod stage for register token function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/registerToken/"
+  RegisterTokenFuncion:
+    Description: "register token Lambda Function ARN"
+    Value: !GetAtt RegisterTokenFuncion.Arn
+  RegisterTokenFuncionIamRole:
+    Description: "Implicit IAM Role created for register token function"
+    Value: !GetAtt RegisterTokenFuncionRole.Arn
